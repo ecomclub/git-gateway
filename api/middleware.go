@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	jwsSignatureHeaderName = "x-nf-sign"
+	jwsSignatureHeaderName = "x-store-id"
 )
 
 type NetlifyMicroserviceClaims struct {
@@ -37,21 +37,13 @@ func (a *API) loadInstanceConfig(w http.ResponseWriter, r *http.Request) (contex
 	}
 
 	claims := NetlifyMicroserviceClaims{}
-	p := jwt.Parser{ValidMethods: []string{jwt.SigningMethodHS256.Name}}
-	_, err := p.ParseWithClaims(signature, &claims, func(token *jwt.Token) (interface{}, error) {
-		return []byte(a.config.OperatorToken), nil
-	})
-	if err != nil {
-		return nil, badRequestError("Operator microservice signature is invalid: %v", err)
-	}
 
-	instanceID := claims.InstanceID
+	instanceID := signature
 	if instanceID == "" {
 		return nil, badRequestError("Instance ID is missing")
 	}
 
 	logEntrySetField(r, "instance_id", instanceID)
-	logEntrySetField(r, "netlify_id", claims.NetlifyID)
 	instance, err := a.db.GetInstance(instanceID)
 	if err != nil {
 		if models.IsNotFoundError(err) {
@@ -65,7 +57,6 @@ func (a *API) loadInstanceConfig(w http.ResponseWriter, r *http.Request) (contex
 		return nil, internalServerError("Error loading environment config").WithInternalError(err)
 	}
 
-	ctx = withNetlifyID(ctx, claims.NetlifyID)
 	ctx, err = WithInstanceConfig(ctx, config, instanceID)
 	if err != nil {
 		return nil, internalServerError("Error loading instance config").WithInternalError(err)
