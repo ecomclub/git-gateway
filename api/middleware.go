@@ -36,8 +36,6 @@ func (a *API) loadInstanceConfig(w http.ResponseWriter, r *http.Request) (contex
 		return nil, badRequestError("Operator signature missing")
 	}
 
-	claims := NetlifyMicroserviceClaims{}
-
 	instanceID := signature
 	if instanceID == "" {
 		return nil, badRequestError("Instance ID is missing")
