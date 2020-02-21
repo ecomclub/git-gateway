@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `intances` (
+CREATE TABLE IF NOT EXISTS `instances` (
   `id`               VARCHAR    NOT NULL   PRIMARY KEY,
   `uuid`             VARCHAR    NULL,
   `raw_base_config`  TEXT       NULL,
