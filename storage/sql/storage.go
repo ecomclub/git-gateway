@@ -55,6 +55,17 @@ func (conn *Connection) GetInstance(instanceID string) (*models.Instance, error)
 	return &instance, nil
 }
 
+func (conn *Connection) GetInstanceByStoreID(storeID string) (*models.Instance, error) {
+	instance := models.Instance{}
+	if rsp := conn.db.Where("store_id = ?", storeID).First(&instance); rsp.Error != nil {
+		if rsp.RecordNotFound() {
+			return nil, models.InstanceNotFoundError{}
+		}
+		return nil, errors.Wrap(rsp.Error, "error find instance by store_id")
+	}
+	return &instance, nil
+}
+
 func (conn *Connection) GetInstanceByUUID(uuid string) (*models.Instance, error) {
 	instance := models.Instance{}
 	if rsp := conn.db.Where("uuid = ?", uuid).First(&instance); rsp.Error != nil {

@@ -38,6 +38,7 @@ func (a *API) GetAppManifest(w http.ResponseWriter, r *http.Request) error {
 type InstanceRequestParams struct {
 	UUID       string              `json:"uuid"`
 	BaseConfig *conf.Configuration `json:"config"`
+	StoreID    string              `json:"store_id"`
 }
 
 type InstanceResponse struct {
@@ -65,6 +66,7 @@ func (a *API) CreateInstance(w http.ResponseWriter, r *http.Request) error {
 		ID:         uuid.NewRandom().String(),
 		UUID:       params.UUID,
 		BaseConfig: params.BaseConfig,
+		StoreID:    params.StoreID,
 	}
 	if err = a.db.CreateInstance(&i); err != nil {
 		return internalServerError("Database error creating instance").WithInternalError(err)

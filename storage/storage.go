@@ -7,6 +7,7 @@ type Connection interface {
 	Close() error
 	Automigrate() error
 
+	GetInstanceByStoreID(storeID string) (*models.Instance, error)
 	GetInstanceByUUID(uuid string) (*models.Instance, error)
 	GetInstance(instanceID string) (*models.Instance, error)
 	CreateInstance(instance *models.Instance) error

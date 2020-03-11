@@ -22,6 +22,7 @@ type Instance struct {
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `json:"deleted_at"`
+	StoreID   string     `json:"store_id"`
 }
 
 // TableName returns the table name used for the Instance model

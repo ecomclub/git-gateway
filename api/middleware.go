@@ -36,13 +36,14 @@ func (a *API) loadInstanceConfig(w http.ResponseWriter, r *http.Request) (contex
 		return nil, badRequestError("Operator signature missing")
 	}
 
-	instanceID := signature
-	if instanceID == "" {
-		return nil, badRequestError("Instance ID is missing")
+	storeID := signature
+	if storeID == "" {
+		return nil, badRequestError("Store ID is missing")
 	}
 
-	logEntrySetField(r, "instance_id", instanceID)
-	instance, err := a.db.GetInstance(instanceID)
+	logEntrySetField(r, "store_id", storeID)
+	instance, err := a.db.GetInstanceByStoreID(storeID)
+
 	if err != nil {
 		if models.IsNotFoundError(err) {
 			return nil, notFoundError("Unable to locate site configuration")
@@ -55,7 +56,7 @@ func (a *API) loadInstanceConfig(w http.ResponseWriter, r *http.Request) (contex
 		return nil, internalServerError("Error loading environment config").WithInternalError(err)
 	}
 
-	ctx, err = WithInstanceConfig(ctx, config, instanceID)
+	ctx, err = WithInstanceConfig(ctx, config, instance.ID)
 	if err != nil {
 		return nil, internalServerError("Error loading instance config").WithInternalError(err)
 	}
