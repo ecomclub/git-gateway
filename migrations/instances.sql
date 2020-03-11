@@ -5,5 +5,6 @@ CREATE TABLE IF NOT EXISTS `instances` (
   `base_config`      TEXT       NULL,
   `created_at`       DATETIME   NOT NULL   DEFAULT CURRENT_TIMESTAMP,
   `updated_at`       DATETIME   NULL,
-  `deleted_at`       DATETIME   NULL
+  `deleted_at`       DATETIME   NULL,
+  `store_id`         VARCHAR    NULL
 );
